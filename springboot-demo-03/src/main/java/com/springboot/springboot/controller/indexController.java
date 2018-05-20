@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
-//@Controller
+@Controller
 public class indexController {
 
     private static final Logger logger = LoggerFactory.getLogger(indexController.class);
@@ -47,7 +47,7 @@ public class indexController {
 
     @RequestMapping("/home")
     public String index(Model model){
-        model.addAttribute("value1","aaaaa");
+        model.addAttribute("value1","aaa");
         List<String> colors = Arrays.asList(new String[] {"green","red","blue"});
         model.addAttribute("Colors",colors);
 

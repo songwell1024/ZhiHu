@@ -66,7 +66,17 @@
     <#--是否作为ftl语法解析,默认是true，false就是以文本方式引入,
         注意:在ftl文件里布尔值都是直接赋值的如parse=true,而不是parse="true"-->
     <#include "/header.html" encoding="UTF-8" parse=false></br>
-    <#include "/header.html" encoding="UTF-8" parse=true>
+    <#include "/header.html" encoding="UTF-8" parse=true></br>
+
+    <#if  value1== "aaa">
+         haha
+    <#elseif  value1== "aaaa">
+         ....
+    <#elseif  value1??>         <#--判断是否为空-->
+        .....
+    <#else>
+        ......
+    </#if>
 
 </body>
 </html>
