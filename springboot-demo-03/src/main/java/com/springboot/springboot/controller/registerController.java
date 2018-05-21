@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 //首页的登录功能
@@ -21,7 +22,9 @@ public class registerController {
     userService uService;
 
     @RequestMapping(path = {"/reg/"}, method = RequestMethod.POST)
-    public String reg(Model model, @RequestParam("username") String username, @RequestParam("password") String password) {
+    public String reg(Model model, @RequestParam("username") String username, @RequestParam("password") String password,
+                      @RequestParam(value = "rememberme",defaultValue = "false") boolean rememberme,
+                      HttpServletResponse response) {
         try {
             Map<String, String> map = uService.register(username, password);
             if (map.containsKey("msg")) {
@@ -29,16 +32,35 @@ public class registerController {
                 return "login";
             }
 
-            return "redirect:/";
+
         } catch (Exception e) {
             logger.error("注册异常" + e.getMessage());
             return "login";
         }
-
+        return "redirect:/";
     }
 
     @RequestMapping(path = {"/register"}, method = RequestMethod.GET)
     public String register(Model model) {
         return "login";
     }
+
+
+    @RequestMapping(path={"/reg/"},method = RequestMethod.POST)
+    public String login(Model model,@RequestParam("userName") String userName, @RequestParam("password") String password){
+
+        try{
+            Map<String,String> map = uService.login(userName,password);
+            if(map.containsKey("msg")){
+                model.addAttribute("msg",map.get("msg"));
+                return "login";
+            }
+
+        }catch (Exception e){
+            logger.error("登陆异常" + e.getMessage());
+            return "login";
+        }
+        return "redirect:/";
+    }
+
 }
