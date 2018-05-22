@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Mapper
 public interface loginTicketsDAO {
 
-    String TABLE_NAME =  " login_tickets ";
+    String TABLE_NAME =  " login_ticket ";
     String TABLE_FIELDS = " user_id, ticket, expired, status ";
     String SELECT_FIELDS = " id " + TABLE_FIELDS;
 
-    @Insert({"insert into", TABLE_NAME, "(",TABLE_FIELDS, ") value(#{user_id}, #{ticket}, #{expired}, #{status})"})
-    int addTicket(loginTickets loginTicket);
+    @Insert({"insert into", TABLE_NAME, "(",TABLE_FIELDS, ") values (#{user_id}, #{ticket}, #{expired}, #{status})"})
+    int addTicket(loginTickets ticket);
 
     @Select({"select", TABLE_FIELDS," from", TABLE_NAME, " where ticket = #{ticket}"})
     loginTickets selectTicket(String ticket);

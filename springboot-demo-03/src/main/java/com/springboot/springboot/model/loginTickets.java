@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class loginTickets {
     private int id;
-    private int userId;
+    private int user_id;
     private Date expired;
     private int status;// 0有效，1无效
     private String ticket;
@@ -26,11 +26,11 @@ public class loginTickets {
     }
 
     public int getUserId() {
-        return userId;
+        return user_id;
     }
 
     public void setUserId(int userId) {
-        this.userId = userId;
+        this.user_id = userId;
     }
 
     public Date getExpired() {

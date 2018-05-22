@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
@@ -27,40 +28,47 @@ public class registerController {
                       HttpServletResponse response) {
         try {
             Map<String, String> map = uService.register(username, password);
-            if (map.containsKey("msg")) {
+            if (map.containsKey("ticket")) {
+                Cookie cookie = new Cookie("ticket",map.get("ticket").toString());
+                cookie.setPath("/");
+                response.addCookie(cookie);
+                return "redirect:/";
+            }else{
                 model.addAttribute("msg", map.get("msg"));
                 return "login";
             }
-
-
         } catch (Exception e) {
             logger.error("注册异常" + e.getMessage());
             return "login";
         }
-        return "redirect:/";
     }
 
-    @RequestMapping(path = {"/register"}, method = RequestMethod.GET)
+    @RequestMapping(path = {"/relogin"}, method = RequestMethod.GET)
     public String register(Model model) {
         return "login";
     }
 
 
-    @RequestMapping(path={"/reg/"},method = RequestMethod.POST)
-    public String login(Model model,@RequestParam("userName") String userName, @RequestParam("password") String password){
+    @RequestMapping(path={"/login/"},method = RequestMethod.POST)
+    public String login(Model model,@RequestParam("username") String userName, @RequestParam("password") String password,
+                        @RequestParam(value = "rememberme",defaultValue = "false") boolean rememberme,
+                        HttpServletResponse response){
 
         try{
             Map<String,String> map = uService.login(userName,password);
-            if(map.containsKey("msg")){
+            if(map.containsKey("ticket")){
+               Cookie cookie = new Cookie("ticket",map.get("ticket").toString());
+               cookie.setPath("/");           //可在同一应用服务器内共享cookie
+               response.addCookie(cookie);
+                return "redirect:/";
+            }else{
                 model.addAttribute("msg",map.get("msg"));
                 return "login";
             }
-
         }catch (Exception e){
             logger.error("登陆异常" + e.getMessage());
             return "login";
         }
-        return "redirect:/";
     }
 
 }

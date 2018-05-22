@@ -59,9 +59,9 @@ public class userService {
     }
 
     //登陆
-    public Map<String,String> login(String userName, String password){
+    public Map<String,String> login(String username, String password){
         Map<String,String> map = new HashMap<>();
-        if(StringUtils.isEmpty(userName)){
+        if(StringUtils.isEmpty(username)){
             map.put("msg","用户名不能为空");
             return map;
         }
@@ -71,7 +71,7 @@ public class userService {
             return map;
         }
 
-        User user = uDAO.selectByName(userName);
+        User user = uDAO.selectByName(username);
         if (user == null){
             map.put("msg","用户名不存在");
             return map;
@@ -88,15 +88,15 @@ public class userService {
     }
 
     public String addLoginTicket(int user_id){
-        loginTickets loginTickets = new loginTickets();
-        loginTickets.setUserId(user_id);
+        loginTickets ticket = new loginTickets();
+        ticket.setUserId(user_id);
         Date nowDate = new Date();
         nowDate.setTime(3600*24*10 + nowDate.getTime());
-        loginTickets.setExpired(nowDate);
-        loginTickets.setStatus(0);
-        loginTickets.setTicket(UUID.randomUUID().toString().replaceAll("_",""));
-        lTicketsDAO.addTicket(loginTickets);
-        return loginTickets.getTicket();
+        ticket.setExpired(nowDate);
+        ticket.setStatus(0);
+        ticket.setTicket(UUID.randomUUID().toString().replaceAll("_",""));
+        lTicketsDAO.addTicket(ticket);
+        return ticket.getTicket();
 
     }
 }

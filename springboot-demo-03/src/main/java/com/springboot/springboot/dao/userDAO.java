@@ -13,7 +13,7 @@ public interface userDAO {
 
     //增
     @Insert({"insert into ", TABLE_NAME,"(",TABLE_FIELDS,
-            ") Values(#{name}, #{password}, #{salt}, #{head_url})"})
+            ") values(#{name}, #{password}, #{salt}, #{head_url})"})
     int addUser(User user);
     //查
     @Select({"select ",SELECT_FIELDS,"from",TABLE_NAME, "where id=#{id}"})

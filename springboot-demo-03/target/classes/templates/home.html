@@ -72,8 +72,10 @@
          haha
     <#elseif  value1== "aaaa">
          ....
-    <#else>
+    <#elseif  value1??>         <#--判断是否为空-->
         .....
+    <#else>
+        ......
     </#if>
 
 </body>
