@@ -12,7 +12,7 @@ public interface questionDAO {
     //这个地方注意前后加空格，后面不注意的话可能就出错了
     String TABLE_NAME = " question ";
     String TABLE_FIELDS = " title, content, user_id, created_date, comment_count ";
-    String SELECT_FIELDS = " id " + TABLE_FIELDS;
+    String SELECT_FIELDS = " id, " + TABLE_FIELDS;
 
     //增
     @Insert({"insert into ", TABLE_NAME,"(",TABLE_FIELDS,

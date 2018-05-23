@@ -22,14 +22,15 @@ public class registerController {
     @Autowired
     userService uService;
 
-    @RequestMapping(path = {"/reg/"}, method = RequestMethod.POST)
+    //注册
+    @RequestMapping(path = {"/reg/"}, method = {RequestMethod.POST})
     public String reg(Model model, @RequestParam("username") String username, @RequestParam("password") String password,
                       @RequestParam(value = "rememberme",defaultValue = "false") boolean rememberme,
                       HttpServletResponse response) {
         try {
             Map<String, String> map = uService.register(username, password);
             if (map.containsKey("ticket")) {
-                Cookie cookie = new Cookie("ticket",map.get("ticket").toString());
+                Cookie cookie = new Cookie("ticket",map.get("ticket"));
                 cookie.setPath("/");
                 response.addCookie(cookie);
                 return "redirect:/";
@@ -43,25 +44,25 @@ public class registerController {
         }
     }
 
-    @RequestMapping(path = {"/relogin"}, method = RequestMethod.GET)
+    @RequestMapping(path = {"/reglogin"}, method = {RequestMethod.GET})
     public String register(Model model) {
         return "login";
     }
 
-
-    @RequestMapping(path={"/login/"},method = RequestMethod.POST)
-    public String login(Model model,@RequestParam("username") String userName, @RequestParam("password") String password,
+    //登陆
+    @RequestMapping(path={"/login/"},method = {RequestMethod.POST})
+    public String login(Model model,@RequestParam("username") String username, @RequestParam("password") String password,
                         @RequestParam(value = "rememberme",defaultValue = "false") boolean rememberme,
                         HttpServletResponse response){
-
         try{
-            Map<String,String> map = uService.login(userName,password);
+            Map<String,Object> map = uService.login(username,password);
             if(map.containsKey("ticket")){
                Cookie cookie = new Cookie("ticket",map.get("ticket").toString());
                cookie.setPath("/");           //可在同一应用服务器内共享cookie
                response.addCookie(cookie);
-                return "redirect:/";
-            }else{
+               return "redirect:/";
+            }
+             else{
                 model.addAttribute("msg",map.get("msg"));
                 return "login";
             }

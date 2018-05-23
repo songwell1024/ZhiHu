@@ -1,13 +1,13 @@
 package com.springboot.springboot.model;
 
 public class User {
-    private Integer id;
+    private int id;
     private String name;
     private String password;
     private String salt;
     private String head_url;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -39,13 +39,6 @@ public class User {
         this.head_url = head_url;
     }
 
-    public User(){
-
-    }
-    public  User(String name){
-        this.name = name;
-    }
-
     public String getName() {
         return name;
     }
@@ -54,6 +47,12 @@ public class User {
         this.name = name;
     }
 
+//    public  User(){
+//
+//    }
+//    public  User(String name){
+//        this.name = name;
+//    }
    public String userDescription(){
         return "This is "+ name;
    }

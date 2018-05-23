@@ -21,9 +21,6 @@ public class userService {
     @Autowired
     loginTicketsDAO lTicketsDAO;
 
-    public User getUser(int id){
-        return uDAO.selectById(id);
-    }
 
     //注册
     public Map<String,String > register(String userName,String password){
@@ -59,8 +56,8 @@ public class userService {
     }
 
     //登陆
-    public Map<String,String> login(String username, String password){
-        Map<String,String> map = new HashMap<>();
+    public Map<String,Object> login(String username, String password){
+        Map<String,Object> map = new HashMap<String,Object>();
         if(StringUtils.isEmpty(username)){
             map.put("msg","用户名不能为空");
             return map;
@@ -77,8 +74,8 @@ public class userService {
             return map;
         }
 
-        if(!WendaUtil.MD5(password + user.getSalt()).equals(user.getPassword())){
-            map.put("msg","密码错误");
+        if (!WendaUtil.MD5(password+user.getSalt()).equals(user.getPassword())) {
+            map.put("msg", "密码错误");
             return map;
         }
 
@@ -91,13 +88,17 @@ public class userService {
         loginTickets ticket = new loginTickets();
         ticket.setUserId(user_id);
         Date nowDate = new Date();
-        nowDate.setTime(3600*24*10 + nowDate.getTime());
+        nowDate.setTime(3600*24*100 + nowDate.getTime());
         ticket.setExpired(nowDate);
         ticket.setStatus(0);
         ticket.setTicket(UUID.randomUUID().toString().replaceAll("_",""));
         lTicketsDAO.addTicket(ticket);
         return ticket.getTicket();
 
+    }
+
+    public User getUser(int id){
+        return uDAO.selectById(id);
     }
 }
 
