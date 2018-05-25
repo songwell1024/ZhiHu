@@ -1,0 +1,23 @@
+package com.springboot.springboot.configuration;
+
+import com.springboot.springboot.interceptor.PassportInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+
+@Configuration
+@Component
+public class WendaWepConfiguration implements WebMvcConfigurer{
+    @Autowired
+    PassportInterceptor passportInterceptor;
+
+    //添加拦截器
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        //添加自己写的拦截器
+        registry.addInterceptor(passportInterceptor);
+    }
+}

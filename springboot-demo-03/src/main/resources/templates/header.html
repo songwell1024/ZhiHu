@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-ZA-Response-Id" content="46acde5c53db46f2806ccad726de9826">
-    <title>首页 - 牛客</title>
+    <title>首页 - 问答</title>
     <meta name="apple-itunes-app" content="app-id=432274380">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="mobile-agent" content="format=html5;url=https://nowcoder.com/">
@@ -15,45 +15,48 @@
     <link rel="search" type="application/opensearchdescription+xml" href="https://nowcoder.com/static/search.xml" title="牛客">
     <link rel="stylesheet" href="../styles/index.css">
     <style>
-    .zm-item-answer-author-info a.collapse {margin-top: 0}
+        .zm-item-answer-author-info a.collapse {margin-top: 0}
     </style>
 
 </head>
 <body class="zhi ">
 <div role="navigation" class="zu-top">
     <div class="zg-wrap modal-shifting clearfix" id="zh-top-inner">
-        <a href="https://nowcoder.com/" class="zu-top-link-logo" id="zh-top-link-logo" data-za-c="view_home" data-za-a="visit_home" data-za-l="top_navigation_zhihu_logo">牛客</a>
+        <a href="/" class="zu-top-link-logo" id="zh-top-link-logo" data-za-c="view_home" data-za-a="visit_home" data-za-l="top_navigation_zhihu_logo">牛客</a>
         <div class="top-nav-profile">
-            <a href="https://nowcoder.com/people/hu-yuan-24-48" class="zu-top-nav-userinfo " id=":0" role="button" aria-haspopup="true" aria-activedescendant="">
-                <span class="name">牛客</span>
-                <img class="Avatar" src="../images/res/da8e974dc_s.jpg" srcset="https://pic1.zhimg.com/da8e974dc_xs.jpg 2x" alt="牛客">
+            <#if user??>
+                <a href="/user/${user.id!}" class="zu-top-nav-userinfo " id=":0" role="button" aria-haspopup="true" aria-activedescendant="">
+                    <span class="name">${user.name!}</span>
+                    <img class="Avatar" src="${user.head_url!}" alt="${user.name!}">
                     <span id="zh-top-nav-new-pm" class="zg-noti-number zu-top-nav-pm-count" style="visibility:hidden" data-count="0">
-                    </span>
-            </a>
-            <ul class="top-nav-dropdown" id="top-nav-profile-dropdown" aria-labelledby=":0">
+                        </span>
+                </a>
+                <ul class="top-nav-dropdown" id="top-nav-profile-dropdown" aria-labelledby=":0">
+                    <li>
+                        <a href="/user/$!{user.id}" tabindex="-1" id=":1">
+                            <i class="zg-icon zg-icon-dd-home"></i>我的主页
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/msg/list" tabindex="-1" id=":2">
+                            <i class="zg-icon zg-icon-dd-pm"></i>私信
+                            <span id="zh-top-nav-pm-count" class="zu-top-nav-pm-count zg-noti-number" style="visibility:hidden" data-count="0">
+                        </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/logout" tabindex="-1" id=":4">
+                            <i class="zg-icon zg-icon-dd-logout"></i>退出
+                        </a>
+                    </li>
+                </ul>
+            <#else>
+            <ul class="topnav-noauth clearfix">
                 <li>
-                    <a href="https://nowcoder.com/people/hu-yuan-24-48" tabindex="-1" id=":1">
-                        <i class="zg-icon zg-icon-dd-home"></i>我的主页
-                    </a>
-                </li>
-                <li>
-                    <a href="https://nowcoder.com/inbox" tabindex="-1" id=":2">
-                        <i class="zg-icon zg-icon-dd-pm"></i>私信
-                    <span id="zh-top-nav-pm-count" class="zu-top-nav-pm-count zg-noti-number" style="visibility:hidden" data-count="0">
-                    </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://nowcoder.com/settings" tabindex="-1" id=":3">
-                        <i class="zg-icon zg-icon-dd-settings"></i>设置
-                    </a>
-                </li>
-                <li>
-                    <a href="https://nowcoder.com/logout" tabindex="-1" id=":4">
-                        <i class="zg-icon zg-icon-dd-logout"></i>退出
-                    </a>
+                    <a href="/reglogin">注册/登陆</a>
                 </li>
             </ul>
+            </#if>
         </div>
         <button class="zu-top-add-question" id="zu-top-add-question">提问</button>
         <div role="search" id="zh-top-search" class="zu-top-search">
@@ -131,15 +134,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-<div class="zu-global-notify" id="zh-global-message" style="display:none">
-    <div class="zg-wrap">
-        <div class="zu-global-nitify-inner">
-            <a class="zu-global-notify-close" href="javascript:;" title="关闭" name="close">x</a>
-            <span class="zu-global-notify-icon"></span>
-            <span class="zu-global-notify-msg"></span>
         </div>
     </div>
 </div>
