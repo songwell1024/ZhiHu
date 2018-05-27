@@ -23,16 +23,10 @@ import java.util.Date;
  行所有拦截器的postHandle方法,完后从最后一个拦截器往回执行所有拦截器的afterCompletion方法.
  */
 
-//这是第一个拦截器
+//这是第二个拦截器
 //@component （把普通pojo实例化到spring容器中，相当于配置文件中的
 @Component
-public class PassportInterceptor implements HandlerInterceptor{
-
-    @Autowired
-    loginTicketsDAO lTicketsDAO;
-
-    @Autowired
-    userDAO uDAO;
+public class LoginRequiredInterceptor implements HandlerInterceptor{
 
     @Autowired
     HostHolder hostHolder;
@@ -40,39 +34,20 @@ public class PassportInterceptor implements HandlerInterceptor{
     //判断然后进行用户拦截
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String tickets = null;
-        if(request.getCookies() != null){
-            for(Cookie cookie : request.getCookies()){
-                if(cookie.getName().equals("ticket")){
-                    tickets = cookie.getValue();
-                    break;
-                }
-            }
-        }
-
-        if(tickets != null ){
-            loginTickets loginTickets  = lTicketsDAO.selectByTicket(tickets);
-            if(loginTickets == null || loginTickets.getExpired().before(new Date()) || loginTickets.getStatus() != 0){
-                return true;
-            }
-
-            User user = uDAO.selectById(loginTickets.getUserId());
-            hostHolder.setUser(user);
-        }
+        //如果说现在是没有用户登录的
+       if(hostHolder.getUser() == null){
+            response.sendRedirect("/reglogin?next=" + request.getRequestURI());
+//            return false;
+       }
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        //就是为了能够在渲染之前所有的freemaker模板能够访问这个对象user，就是在所有的controller渲染之前将这个user加进去
-        if(modelAndView != null){
-            //这个其实就和model.addAttribute一样的功能，就是把这个变量与前端视图进行交互 //就是与header.html页面的user对应
-            modelAndView.addObject("user",hostHolder.getUser());
-        }
+
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        hostHolder.clear();   //当执行完成之后呢需要将变量清空
     }
 }

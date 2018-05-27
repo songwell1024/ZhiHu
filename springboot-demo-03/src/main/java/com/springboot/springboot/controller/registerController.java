@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +27,7 @@ public class registerController {
     //注册
     @RequestMapping(path = {"/reg/"}, method = {RequestMethod.POST})
     public String reg(Model model, @RequestParam("username") String username, @RequestParam("password") String password,
+                      @RequestParam(value = "next",defaultValue = "false") String next,
                       @RequestParam(value = "rememberme",defaultValue = "false") boolean rememberme,
                       HttpServletResponse response) {
         try {
@@ -34,6 +36,9 @@ public class registerController {
                 Cookie cookie = new Cookie("ticket",map.get("ticket"));
                 cookie.setPath("/");
                 response.addCookie(cookie);
+                if(!StringUtils.isEmpty(next)){           //不为空的时候跳转
+                    return "redirect:"+next;
+                }
                 return "redirect:/";
             }else{
                 model.addAttribute("msg", map.get("msg"));
@@ -46,21 +51,27 @@ public class registerController {
     }
 
     @RequestMapping(path = {"/reglogin"}, method = {RequestMethod.GET})
-    public String register(Model model) {
+    public String register(Model model,@RequestParam(value = "next",defaultValue = "false") String next) {
+        model.addAttribute("next",next);
         return "login";
     }
 
     //登陆
     @RequestMapping(path={"/login/"},method = {RequestMethod.POST})
     public String login(Model model,@RequestParam("username") String username, @RequestParam("password") String password,
+                        @RequestParam(value = "next",defaultValue = "false") String next,
                         @RequestParam(value = "rememberme",defaultValue = "false") boolean rememberme,
                         HttpServletResponse response){
         try{
             Map<String,Object> map = uService.login(username,password);
             if(map.containsKey("ticket")){
-               Cookie cookie = new Cookie("ticket",map.get("ticket").toString());
-               cookie.setPath("/");           //可在同一应用服务器内共享cookie
-               response.addCookie(cookie);
+                Cookie cookie = new Cookie("ticket",map.get("ticket").toString());
+                cookie.setPath("/");           //可在同一应用服务器内共享cookie
+                response.addCookie(cookie);
+                //当读取到的next字段不为空的话跳转
+               if(!StringUtils.isEmpty(next)){
+                   return "redirect:"+ next ;
+               }
                return "redirect:/";
             }
              else{
