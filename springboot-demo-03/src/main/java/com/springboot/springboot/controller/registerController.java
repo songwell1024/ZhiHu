@@ -33,10 +33,10 @@ public class registerController {
         try {
             Map<String, String> map = uService.register(username, password);
             if (map.containsKey("ticket")) {
-                Cookie cookie = new Cookie("ticket",map.get("ticket"));
+                Cookie cookie = new Cookie("ticket",map.get("ticket").toString());
                 cookie.setPath("/");
                 response.addCookie(cookie);
-                if(!StringUtils.isEmpty(next)){           //不为空的时候跳转
+                if(!StringUtils.isEmpty(next)&&!("false".equals(next))){           //不为空的时候跳转
                     return "redirect:"+next;
                 }
                 return "redirect:/";
@@ -69,12 +69,12 @@ public class registerController {
                 cookie.setPath("/");           //可在同一应用服务器内共享cookie
                 response.addCookie(cookie);
                 //当读取到的next字段不为空的话跳转
-               if(!StringUtils.isEmpty(next)){
+               if(!StringUtils.isEmpty(next) && !("false".equals(next))){
                    return "redirect:"+ next ;
                }
                return "redirect:/";
             }
-             else{
+            else{
                 model.addAttribute("msg",map.get("msg"));
                 return "login";
             }
