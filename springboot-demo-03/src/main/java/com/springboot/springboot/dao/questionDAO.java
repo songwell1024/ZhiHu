@@ -19,6 +19,9 @@ public interface questionDAO {
             ") Values(#{title}, #{content}, #{user_id}, #{created_date}, #{comment_count})"})
     int addQuestion(Question question);
 
+    @Select({"select ", TABLE_FIELDS, " from ", TABLE_NAME, " Where id = #{id} "})
+     Question selectQuestionById(int id);
+
     //使用XML的方式完成数据库的操作
     List<Question> selectLatestQuestions(@Param("user_id") int userId, @Param("offset") int offset,
                                          @Param("limit") int limit);

@@ -3,15 +3,14 @@ package com.springboot.springboot.controller;
 import com.springboot.springboot.model.HostHolder;
 import com.springboot.springboot.model.Question;
 import com.springboot.springboot.service.questionService;
+import com.springboot.springboot.service.userService;
 import com.springboot.springboot.utils.WendaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -21,6 +20,9 @@ public class QuestionController {
 
     @Autowired
     questionService qservice;
+
+    @Autowired
+    userService uService;
 
     @Autowired
     HostHolder hostHolder;
@@ -37,6 +39,7 @@ public class QuestionController {
               //也就是游客模式
               if (hostHolder.getUser() == null){
                     question.setUserId(WendaUtil.ANONYMOUS_userId);
+                    //WendaUtil.getJsonString(999);   //可以参照前端的代码， 当code为999的时候就返回主页面
               }else {
                   question.setUserId(hostHolder.getUser().getId());
               }
@@ -49,6 +52,13 @@ public class QuestionController {
           return WendaUtil.getJsonString(1,"添加问题失败");
     }
 
+    @RequestMapping(value = {"/question/{qid}"},method = RequestMethod.GET)
+    public String questionDetails(Model model, @PathVariable("qid") int qid){
+        Question question = qservice.selectQuestionById(qid);
+        model.addAttribute("question",question);
+        model.addAttribute("user",uService.getUser(question.getUserId()));
+        return "detail";
+    }
 
 
 }
