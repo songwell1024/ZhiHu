@@ -16,6 +16,7 @@ public class questionService {
     @Autowired
     SensitiveService sensitiveService;
 
+
     public List<Question> selectLatestQuestions(int user_id, int offset, int limit){
         return qDAO.selectLatestQuestions(user_id,offset,limit);
     }
@@ -35,4 +36,11 @@ public class questionService {
     public Question selectQuestionById(int id){
         return qDAO.selectQuestionById(id);
     }
+
+    //更新评论的数量
+    public int updateCommentCount(int id, int comment_count){
+        return qDAO.updateCommentCount(id,comment_count);
+    }
 }
+
+

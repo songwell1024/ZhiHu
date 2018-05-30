@@ -14,7 +14,7 @@ public interface loginTicketsDAO {
     @Insert({"insert into", TABLE_NAME, "(",TABLE_FIELDS, ") values (#{user_id}, #{ticket}, #{expired}, #{status})"})
     int addTicket(loginTickets ticket);
 
-    @Select({"select", TABLE_FIELDS," from", TABLE_NAME, " where ticket = #{ticket}"})
+    @Select({"select", SELECT_FIELDS," from", TABLE_NAME, " where ticket = #{ticket}"})
     loginTickets selectByTicket(String ticket);
 
     @Update({"update", TABLE_NAME, " set status = #{status} where ticket = #{ticket}"})

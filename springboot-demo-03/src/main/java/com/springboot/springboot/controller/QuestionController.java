@@ -1,7 +1,7 @@
 package com.springboot.springboot.controller;
 
-import com.springboot.springboot.model.HostHolder;
-import com.springboot.springboot.model.Question;
+import com.springboot.springboot.model.*;
+import com.springboot.springboot.service.CommentService;
 import com.springboot.springboot.service.questionService;
 import com.springboot.springboot.service.userService;
 import com.springboot.springboot.utils.WendaUtil;
@@ -12,7 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class QuestionController {
@@ -26,6 +28,9 @@ public class QuestionController {
 
     @Autowired
     HostHolder hostHolder;
+
+    @Autowired
+    CommentService commentService;
 
     @RequestMapping(value = "/question/add",method = {RequestMethod.POST})
     @ResponseBody
@@ -57,7 +62,20 @@ public class QuestionController {
         Question question = qservice.selectQuestionById(qid);
         model.addAttribute("question",question);
         model.addAttribute("user",uService.getUser(question.getUserId()));
+
+        List<Comment> commentList = commentService.selectCommentByEntity(qid, EntityType.ENTITY_QUESTION);
+        List<viewObject> comments = new ArrayList<>();
+
+        for (Comment comment : commentList){
+           viewObject vo = new viewObject();
+           vo.set("comment",comment);
+           vo.set("user", uService.getUser(comment.getUser_id()));
+           comments.add(vo);
+        }
+
+        model.addAttribute("comments",comments);
         return "detail";
+
     }
 
 

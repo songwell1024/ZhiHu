@@ -99,9 +99,9 @@
                         <div class="zm-item-answer-author-info">
                             <a class="zm-item-link-avatar avatar-link" href="" target="_blank"
                                data-tip="p$t$yingxiaodao">
-                                <img src="${comment.user.head_url}"
+                                <img src="${comment.user.head_url!}"
                                      class="zm-list-avatar avatar"></a>
-                            <a class="author-link" target="_blank" href="/user/${comment.user.id}">$comment.user.name</a>
+                            <a class="author-link" target="_blank" href="/user/${comment.user.id!}">${comment.user.name}</a>
                             </div>
                         <div class="zm-item-vote-info" data-votecount="28" data-za-module="VoteInfo">
                                 <span class="voters text">
@@ -113,18 +113,19 @@
                          data-action="/answer/content" data-author-name="营销岛"
                          data-entry-url="/question/36301524/answer/66862039">
                         <div class="zm-editable-content clearfix">
-                            ${comment.comment.content}
+                            ${comment.comment.content!}          <!--comment.content指的是数据库中的表的列的名字-->
                         </div>
                     </div>
                     <a class="zg-anchor-hidden ac" name="22162611-comment"></a>
                     <div class="zm-item-meta answer-actions clearfix js-contentActions">
                         <div class="zm-meta-panel">
                             <a itemprop="url" class="answer-date-link meta-item" target="_blank" href="">发布于
-                                ${comment.comment.createdDate?string('yyyy-MM-dd HH:mm:ss')!}</a>
+                                ${comment.comment.created_date?string('yyyy-MM-dd HH:mm:ss')!}</a>
 
-                            <!--
+
                             <a href="" name="addcomment" class="meta-item toggle-comment js-toggleCommentBox">
                                 <i class="z-icon-comment"></i>4 条评论</a>
+                            <!--
                             <a href="" class="meta-item zu-autohide js-thank" data-thanked="false">
                                 <i class="z-icon-thank"></i>感谢</a>
 
@@ -139,7 +140,7 @@
             </div>
             <a name="draft"></a>
             <form action="/addComment" method="post" id="commentform">
-                <input type="hidden" name="questionId" value="$question.id"/>
+                <input type="hidden" name="question_id" value="${question.id!}"/>
             <div id="zh-question-answer-form-wrap" class="zh-question-answer-form-wrap">
                 <div class="zm-editable-editor-wrap" style="">
                     <div class="zm-editable-editor-outer">
@@ -159,4 +160,4 @@
         </div>
     </div>
 </div>
-#parse("footer.html")
+<#include "/footer.html" encoding="UTF-8" parse=true>
