@@ -32,8 +32,8 @@ public class QuestionController {
     @Autowired
     CommentService commentService;
 
-    @RequestMapping(value = "/question/add",method = {RequestMethod.POST})
-    @ResponseBody
+    @RequestMapping(path = "/question/add",method = {RequestMethod.POST})
+    @ResponseBody               //因为是弹框，所以这里用的是json的返回
     public String addQuestion(@RequestParam("title") String title, @RequestParam("content") String content){
           try{
               Question question = new Question();
@@ -57,7 +57,7 @@ public class QuestionController {
           return WendaUtil.getJsonString(1,"添加问题失败");
     }
 
-    @RequestMapping(value = {"/question/{qid}"},method = RequestMethod.GET)
+    @RequestMapping(path = {"/question/{qid}"},method = RequestMethod.GET)
     public String questionDetails(Model model, @PathVariable("qid") int qid){
         Question question = qservice.selectQuestionById(qid);
         model.addAttribute("question",question);

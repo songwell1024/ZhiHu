@@ -33,7 +33,7 @@ public class CommentController {
     @Autowired
     questionService qService;
 
-    @RequestMapping(value = {"/addComment"},method = RequestMethod.POST)
+    @RequestMapping(path = {"/addComment"},method = RequestMethod.POST)
     public String addComment(@RequestParam("question_id") int question_id, @RequestParam("content") String content){
         try{
             Comment comment = new Comment();
@@ -58,6 +58,5 @@ public class CommentController {
             logger.error("增加评论失败" + e.getMessage());
         }
         return"redirect:/question/" +question_id;
-
     }
 }
