@@ -6,6 +6,6 @@ package com.springboot.springboot.model;
  * 评论的属性
  */
 public class EntityType {
-    public static int ENTITY_QUESTION = 1;
+    public static int ENTITY_QUESTION = 1;      //默认的问题的entity_id
     public static int ENTITY_COMMENT = 2;
 }

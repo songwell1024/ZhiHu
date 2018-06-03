@@ -2,6 +2,7 @@ package com.springboot.springboot.controller;
 
 import com.springboot.springboot.model.*;
 import com.springboot.springboot.service.CommentService;
+import com.springboot.springboot.service.LikeService;
 import com.springboot.springboot.service.questionService;
 import com.springboot.springboot.service.userService;
 import com.springboot.springboot.utils.WendaUtil;
@@ -31,6 +32,9 @@ public class QuestionController {
 
     @Autowired
     CommentService commentService;
+
+    @Autowired
+    LikeService likeService;
 
     @RequestMapping(path = "/question/add",method = {RequestMethod.POST})
     @ResponseBody               //因为是弹框，所以这里用的是json的返回
@@ -69,6 +73,16 @@ public class QuestionController {
         for (Comment comment : commentList){
            viewObject vo = new viewObject();
            vo.set("comment",comment);
+
+           //判断是否是我喜欢的
+            if(hostHolder.getUser() == null){
+                vo.set("liked", 0);
+            }
+            else {
+                vo.set("liked", likeService.getLikeStatus(hostHolder.getUser().getId(),EntityType.ENTITY_COMMENT,comment.getId()));
+            }
+
+           vo.set("likeCount", likeService.getLikeCount(EntityType.ENTITY_COMMENT,comment.getId()));
            vo.set("user", uService.getUser(comment.getUser_id()));
            comments.add(vo);
         }
