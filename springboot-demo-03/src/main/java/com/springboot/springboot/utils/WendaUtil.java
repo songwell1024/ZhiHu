@@ -15,6 +15,8 @@ public class WendaUtil {
 
     // 默认的游客id
     public static int ANONYMOUS_userId = 3;
+    //系统管理员id
+    public static int SYSTEMCONTROLLER_userId = 4;
 
     //json的合适就是这样的{'code',':','msg',':'}
     public static String getJsonString(int code){

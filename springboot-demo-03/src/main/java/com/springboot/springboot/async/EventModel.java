@@ -17,6 +17,14 @@ public class EventModel {
     private int entityId;  //和entityType组合成触发事件的载体  可以使任何一个实体的id，问题，评论，用户，站内信等等
     private int entityOwnerId;         //载体关联的对象
 
+    public EventModel(){
+
+    }
+
+    public EventModel(EventType type){
+        this.type = type;
+    }
+
     //定义可扩展的字段
     private Map<String, String> exts = new HashMap<>();
 
@@ -33,6 +41,7 @@ public class EventModel {
         return type;
     }
 
+    //为了能够实现链状的设置
     public EventModel setType(EventType type) {
         this.type = type;
         return this;      //这个就是为了实现这个xxx.setType().setXX();
@@ -82,4 +91,5 @@ public class EventModel {
         this.exts = exts;
         return this;
     }
+
 }

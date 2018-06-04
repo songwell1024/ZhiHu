@@ -1,5 +1,8 @@
 package com.springboot.springboot.controller;
 
+import com.springboot.springboot.async.EventModel;
+import com.springboot.springboot.async.EventProducer;
+import com.springboot.springboot.async.EventType;
 import com.springboot.springboot.model.Comment;
 import com.springboot.springboot.model.EntityType;
 import com.springboot.springboot.model.HostHolder;
@@ -33,6 +36,9 @@ public class LikeController {
     @Autowired
     CommentService commentService;
 
+    @Autowired
+    EventProducer eventProducer;
+
     //赞
     @RequestMapping(path = {"/like"}, method = RequestMethod.POST)
     @ResponseBody
@@ -41,12 +47,12 @@ public class LikeController {
             return "redirect:/reglogin";
         }
 
-//        Comment comment = commentService.getCommentById(comment_id);
-//
-//        eventProducer.fireEvent(new EventModel(EventType.LIKE)
-//                .setActorId(hostHolder.getUser().getId()).setEntityId(commentId)
-//                .setEntityType(EntityType.ENTITY_COMMENT).setEntityOwnerId(comment.getUserId())
-//                .setExt("questionId", String.valueOf(comment.getEntityId())));
+        Comment comment = commentService.getCommentById(comment_id);
+
+        eventProducer.fireEvent(new EventModel(EventType.LIKE)      //把这个event发出去
+                .setActorId(hostHolder.getUser().getId()).setEntityId(comment_id) //点赞的内容就是评论的id
+                .setEntityType(EntityType.ENTITY_COMMENT).setEntityOwnerId(comment.getUser_id())
+                .setExts("questionId", String.valueOf(comment.getEntity_id())));
 
         long likeCount = likeService.like(hostHolder.getUser().getId(), EntityType.ENTITY_COMMENT, comment_id);
         return WendaUtil.getJsonString(0,String.valueOf(likeCount));

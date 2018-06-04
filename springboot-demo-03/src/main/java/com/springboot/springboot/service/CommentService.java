@@ -44,4 +44,9 @@ public class CommentService{
         return commentDAO.updateStatus(entity_id,entity_type,1)>0;
     }
 
+    //获取评论内容
+    public Comment getCommentById(int id){
+        return commentDAO.selectCommentById(id);
+    }
+
 }

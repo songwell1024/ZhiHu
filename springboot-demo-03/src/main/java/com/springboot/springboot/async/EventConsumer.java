@@ -28,7 +28,7 @@ import java.util.Map;
 public class EventConsumer  implements InitializingBean,ApplicationContextAware{
     private static final Logger logger = LoggerFactory.getLogger(EventConsumer.class);
     private Map<EventType, List<EventHandler>> config = new HashMap<>();
-    private ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;             //sping的上下文
 
     @Autowired
     JedisAdapter jedisAdapter;
@@ -40,30 +40,33 @@ public class EventConsumer  implements InitializingBean,ApplicationContextAware{
         Map<String, EventHandler> beans = applicationContext.getBeansOfType(EventHandler.class);
         if (beans != null){
             for (Map.Entry<String,EventHandler> entry : beans.entrySet()){
-                List<EventType> eventTypes = entry.getValue().getSupportEventTypes();
+                List<EventType> eventTypes = entry.getValue().getSupportEventTypes();   //找到那些handler对当前的事件感兴趣
 
                 for (EventType type : eventTypes){
-                    if (!config.containsKey(type)){
+                    if (!config.containsKey(type)){         //有可能是第一次注册这个事件，所以就可能初始的时候是null
                         //把handler放到config中
-                        config.put(type, new ArrayList<EventHandler>());
+                        config.put(type, new ArrayList<EventHandler>());     //把event注册到config中
                     }
-                    config.get(type).add(entry.getValue());
+                    config.get(type).add(entry.getValue());       //把对这些event感兴趣的handler添加到config中
                 }
             }
         }
 
+        //打开线程去找队列中的事件
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (true){
+                while (true){           //一直取
                     String key  = RedisKeyUtil.getEventQueueKey();
-                    List<String> events = jedisAdapter.brpop(0,key);
+                    List<String> events = jedisAdapter.brpop(0,key);  //若队列中没有这个事件的话就一直等待
                     for (String message : events){
-                        if (message.equals(key)){
+                        if (message.equals(key)){      //返回的第一个值可能是key,把他先过滤掉，取后面的event
                             continue;
                         }
+
+                        //通过JSon的方式反序列化
                         EventModel eventModel = JSON.parseObject(message,EventModel.class);
-                        if (config.containsKey(eventModel.getType())){
+                        if (!config.containsKey(eventModel.getType())){      //是不是有对这个事件有处理的handler
                             logger.error("不能识别的事件");
                             continue;
                         }
