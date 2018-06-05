@@ -1,5 +1,8 @@
 package com.springboot.springboot.controller;
 
+import com.springboot.springboot.async.EventModel;
+import com.springboot.springboot.async.EventProducer;
+import com.springboot.springboot.async.EventType;
 import com.springboot.springboot.service.userService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +26,9 @@ public class registerController {
 
     @Autowired
     userService uService;
+
+    @Autowired
+    EventProducer eventProducer;
 
     //注册
     @RequestMapping(path = {"/reg/"}, method = {RequestMethod.POST})
@@ -68,6 +74,11 @@ public class registerController {
                 Cookie cookie = new Cookie("ticket",map.get("ticket").toString());
                 cookie.setPath("/");           //可在同一应用服务器内共享cookie
                 response.addCookie(cookie);
+
+                //用户登陆完设置一个事件
+                eventProducer.fireEvent(new EventModel(EventType.LOGIN)
+                        .setExts("username",username).setExts("email", "1390505180@qq.com"));
+                       // .setActorId((int)map.get("user_id")));          //用户登陆完之后判断是谁登录的
                 //当读取到的next字段不为空的话跳转
                if(!StringUtils.isEmpty(next) && !("false".equals(next))){
                    return "redirect:"+ next ;
