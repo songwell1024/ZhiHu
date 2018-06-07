@@ -4,6 +4,7 @@ import freemarker.template.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -25,22 +26,24 @@ public class MailSender implements InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(MailSender.class);
     private JavaMailSenderImpl mailSender;
 
-    private FreeMarkerConfigurer freeMarkerConfigurer=null;    //FreeMarker的技术类
+    @Autowired
+    private FreeMarkerConfigurer freeMarkerConfigurer;    //FreeMarker的技术类
+    //private FreeMarkerConfigurer freeMarkerConfigurer=null;    //FreeMarker的技术类
 
     public void setFreeMarkerConfigurer(FreeMarkerConfigurer freeMarkerConfigurer) {
         this.freeMarkerConfigurer = freeMarkerConfigurer;
     }
 
-    public boolean sendWithHTMLTemplate(String to, String subject) {
+    public boolean sendWithHTMLTemplate(String to, String username,String subject) {
         try {
             String nick = MimeUtility.encodeText("Wilson");         //发件人的昵称
             InternetAddress from = new InternetAddress(nick + "<zysong0709@foxmail.com>");  //发件人是谁
             MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,true);
             mimeMessageHelper.setTo(to);
             mimeMessageHelper.setFrom(from);
             mimeMessageHelper.setSubject(subject);
-            String result =getMailText(to);// 使用模板生成html邮件内容
+            String result =getMailText(username);// 使用模板生成html邮件内容
             mimeMessageHelper.setText(result, true);
             mailSender.send(mimeMessage);
             return true;
@@ -55,7 +58,7 @@ public class MailSender implements InitializingBean {
         String htmlText="";
         try {
             //通过指定模板名获取FreeMarker模板实例
-            Template tpl=freeMarkerConfigurer.getConfiguration().getTemplate("mailMessage");
+            Template tpl=freeMarkerConfigurer.getConfiguration().getTemplate("mailMessage.html");
             //FreeMarker通过Map传递动态数据
             Map map=new HashMap();
             map.put("username",username); //注意动态数据的key和模板标签中指定的属性相匹配
@@ -73,7 +76,8 @@ public class MailSender implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         mailSender = new JavaMailSenderImpl();
         mailSender.setUsername("zysong0709@foxmail.com");
-        mailSender.setPassword("s940709");
+        //mailSender.setPassword("s940709");
+        mailSender.setPassword("wrzizdhsoszjdhec");
         mailSender.setHost("smtp.qq.com");
         //mailSender.setHost("smtp.qq.com");
         mailSender.setPort(465);
