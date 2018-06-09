@@ -76,8 +76,7 @@ public class MailSender implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         mailSender = new JavaMailSenderImpl();
         mailSender.setUsername("zysong0709@foxmail.com");
-        //mailSender.setPassword("s940709");
-        mailSender.setPassword("wrzizdhsoszjdhec");
+        mailSender.setPassword("wrzizdhsoszjdhec");                //这个是你打开pop3/smtp服务时的给的那个授权码，不是邮箱的密码
         mailSender.setHost("smtp.qq.com");
         //mailSender.setHost("smtp.qq.com");
         mailSender.setPort(465);
