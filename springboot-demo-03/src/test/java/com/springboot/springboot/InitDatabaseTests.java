@@ -2,8 +2,10 @@ package com.springboot.springboot;
 
 import com.springboot.springboot.dao.questionDAO;
 import com.springboot.springboot.dao.userDAO;
+import com.springboot.springboot.model.EntityType;
 import com.springboot.springboot.model.Question;
 import com.springboot.springboot.model.User;
+import com.springboot.springboot.service.FollowService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,11 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
 import java.util.Random;
 
+/**
+ * @author WilsonSong
+ * @date 2018/6/22
+ * 生成测试数据
+ */
 //@RunWith(SpringRunner.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -26,6 +32,8 @@ public class InitDatabaseTests {
 	userDAO uDAO;
 	@Autowired
 	questionDAO qDAO;
+	@Autowired
+	FollowService followService;
 
 	@Test
 	public void initDatabase() {
@@ -38,6 +46,11 @@ public class InitDatabaseTests {
 			user.setPassword("");
 			user.setSalt("");
 			uDAO.addUser(user);
+
+			//互相关注的测试数据的生成
+			for (int j = 0; j< i; ++j){
+				followService.follow(j , EntityType.ENTITY_USER,i);
+			}
 
 			user.setPassword("XXX");
 			uDAO.updatePassword(user);

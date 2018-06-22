@@ -1,18 +1,15 @@
 package com.springboot.springboot.utils;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.springboot.springboot.model.User;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.BinaryClient;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Tuple;
+import redis.clients.jedis.*;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author WilsonSong
@@ -102,7 +99,7 @@ public class JedisAdapter implements InitializingBean {
             jedis = pool.getResource();
             return jedis.lpush(key,value);
         }catch (Exception e){
-            logger.error("Redis队列添加异常");
+            logger.error("Redis队列添加异常" + e.getMessage());
         }finally {
             if (jedis != null){
                 jedis.close();
@@ -117,7 +114,104 @@ public class JedisAdapter implements InitializingBean {
             jedis = pool.getResource();
             return jedis.brpop(timeout,key);
         }catch (Exception e){
-            logger.error("Redis队列弹出数据异常");
+            logger.error("Redis队列弹出数据异常" + e.getMessage());
+        }finally {
+            if (jedis != null){
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    //从线程池里获取一个jedis的线程
+    public Jedis getJedis(){
+        return pool.getResource();
+    }
+    //jedis的事务  transaction是jedis中的事务管理对象
+    public Transaction multi(Jedis jedis){
+        try{
+            return jedis.multi();  //开启事务
+        }catch (Exception e){
+            logger.error("事务开启异常" + e.getMessage());
+        }
+        return null;
+    }
+
+    //multi开启事务执行之后再zsort中返回的是list
+    public List<Object> exec(Transaction tx, Jedis jedis){
+        try{
+            return tx.exec();   //执行事务
+        }catch (Exception e){
+            logger.error("事务启动异常" +  e.getMessage());
+        }finally {
+            //当事务不为空的时候要将其关闭
+            if (tx != null){
+                try{
+                    tx.close();
+                }catch (IOException ioe){
+                    logger.error("发生异常" + ioe.getMessage());
+                }
+            }
+            //把jedis关闭
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    //把用户加到关注的列表中
+    public long zadd(String key, double score, String value){
+        Jedis jedis  = null;
+        try{
+            jedis  = pool.getResource();
+            return jedis.zadd(key,score,value);
+        }catch (Exception e){
+            logger.error("添加用户关注失败" + e.getMessage());
+        }finally {
+            if (jedis != null){
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    public Set<String> zrevrange(String key, int start, int end){
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            return jedis.zrevrange(key, start, end);
+        }catch (Exception e){
+            logger.error("发生异常" + e.getMessage());
+        }finally {
+            if (jedis != null){
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    public long zcard(String key){
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.zcard(key);
+        }catch (Exception e){
+            logger.error("发生异常" +  e.getMessage());
+        }finally {
+            if (jedis != null){
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    public Double zscore(String key, String member){       //Double是类，是double的实现类，double是属性
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+        }catch (Exception e){
+            logger.error("发生异常" + e.getMessage());
         }finally {
             if (jedis != null){
                 jedis.close();
