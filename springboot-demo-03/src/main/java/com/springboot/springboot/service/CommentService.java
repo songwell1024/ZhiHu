@@ -30,6 +30,10 @@ public class CommentService{
         return commentDAO.getCommentCount(entity_id,entity_type);
     }
 
+    public int getUserCommentCount(int userId){
+        return commentDAO.getUserCommentCount(userId);
+    }
+
     //增加评论
     public int addComment(Comment comment){
         //过滤下
@@ -48,5 +52,7 @@ public class CommentService{
     public Comment getCommentById(int id){
         return commentDAO.selectCommentById(id);
     }
+
+
 
 }

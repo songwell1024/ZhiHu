@@ -49,7 +49,7 @@ public class InitDatabaseTests {
 
 			//互相关注的测试数据的生成
 			for (int j = 0; j< i; ++j){
-				followService.follow(j , EntityType.ENTITY_USER,i);
+				followService.follow(j, i, EntityType.ENTITY_USER);
 			}
 
 			user.setPassword("XXX");

@@ -24,6 +24,7 @@ public class FollowService {
 
     //关注
     public boolean follow(int userId, int entityId, int entityType){
+        //两条优先队列
         String followerKey = RedisKeyUtil.getFollowerKey(entityId, entityType);
         String followeeKey = RedisKeyUtil.getFolloweeKey(userId, entityType);
 
@@ -44,6 +45,7 @@ public class FollowService {
         String followerKey = RedisKeyUtil.getFollowerKey(entityId, entityType);
         String followeeKey = RedisKeyUtil.getFolloweeKey(userId, entityType);
 
+        //使用事务来实现关注和取消关注，事务能够确保同时实现
         Jedis jedis = jedisAdapter.getJedis();
         Transaction tx = jedisAdapter.multi(jedis);
         tx.zrem(followerKey, String.valueOf(userId));      //取消关注就是从zset中删除
@@ -62,7 +64,7 @@ public class FollowService {
         return ids;
     }
     // 获取粉丝的列表
-    public List<Integer> getFollowers(int entityType, int entityId, int count){
+    public List<Integer> getFollowers(int entityId, int entityType,  int count){
         String followerKey = RedisKeyUtil.getFollowerKey(entityId,entityType);
         return getIdFromSet(jedisAdapter.zrevrange(followerKey,0, count));
     }
@@ -74,7 +76,7 @@ public class FollowService {
     }
 
     // 获取我关注的实体的列表
-    public List<Integer> getFollowees(int entityType, int entityId, int count){
+    public List<Integer> getFollowees( int entityId, int entityType, int count){
         String followeeKey = RedisKeyUtil.getFolloweeKey(entityId,entityType);
         return getIdFromSet(jedisAdapter.zrevrange(followeeKey,0, count));
     }
