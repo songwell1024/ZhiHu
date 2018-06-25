@@ -3,12 +3,7 @@
 <link rel="stylesheet" href="../styles/detail.css">
     <div class="zg-wrap zu-main clearfix " role="main">
         <div class="zm-profile-section-wrap zm-profile-followee-page">
-            <!--
-                <div class="zm-profile-section-head">
-                    <span class="zm-profile-section-name">
-                        <a href="#">${profileUser.user.name}</a> 关注了 ${profileUser.followerCount} 人
-                    </span>
-                </div>-->
+
                 <div class="zm-profile-section-list">
                     <div id="zh-profile-follows-list">
                         <div class="zh-general-list clearfix">
@@ -17,7 +12,7 @@
                                     <#if profileUser.followed>
                                     <button class="zg-btn zg-btn-unfollow zm-rich-follow-btn small nth-0
                                     js-follow-user" data-status="1" data-id="${profileUser.user.id}">取消关注</button>
-                                    #else
+                                    <#else>
                                     <button class="zg-btn zg-btn-follow zm-rich-follow-btn small nth-0
                                     js-follow-user" data-id="${profileUser.user.id}">关注</button>
                                     </#if>

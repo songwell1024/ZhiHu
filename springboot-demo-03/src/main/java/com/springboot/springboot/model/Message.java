@@ -16,6 +16,8 @@ public class Message {
     private int has_read;
     private String conversation_id;
 
+
+
     public int getId() {
         return id;
     }
@@ -67,14 +69,16 @@ public class Message {
     //站内消息的id保持一致
     public String getConversationId() {
         if(from_id < to_id){
-            return String.format("%d_%d",from_id, to_id);
+            conversation_id = String.format("%d_%d",from_id, to_id);
+            return conversation_id;
         }
         else{
-            return String.format("%d_%d",to_id,from_id);
+            conversation_id =String.format("%d_%d",to_id,from_id);
+            return conversation_id;
         }
     }
-
     public void setConversationId(String conversation_id) {
         this.conversation_id = conversation_id;
     }
+
 }

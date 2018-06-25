@@ -71,10 +71,11 @@ public class FollowController {
         //是否关注
         boolean ret = followService.unfollow(hostHolder.getUser().getId(), userId, EntityType.ENTITY_USER);
 
-        //点击关注之后就触发相应的关注的事件
-        eventProducer.fireEvent(new EventModel(EventType.UNFOLLOW)
-                .setActorId(hostHolder.getUser().getId()).setEntityType(EntityType.ENTITY_USER)   //事件的触发者的id，触发者关注的对象属性是人
-                .setEntityId(userId).setEntityOwnerId(userId));  //关注的对象的id，
+//        //点击关注之后就触发相应的关注的事件
+        //取消关注不需要触发相应的事件了，不需要事件处理和发送系统通知
+//        eventProducer.fireEvent(new EventModel(EventType.UNFOLLOW)
+//                .setActorId(hostHolder.getUser().getId()).setEntityType(EntityType.ENTITY_USER)   //事件的触发者的id，触发者关注的对象属性是人
+//                .setEntityId(userId).setEntityOwnerId(userId));  //关注的对象的id，
         return WendaUtil.getJsonString(ret ? 0 : 1, String.valueOf(followService.getFolloweeCount(hostHolder.getUser().getId(),
                 EntityType.ENTITY_USER)));  //我当前关注了多少人
     }
@@ -125,10 +126,10 @@ public class FollowController {
         //是否关注
         boolean ret = followService.unfollow(hostHolder.getUser().getId(), questionId, EntityType.ENTITY_QUESTION);
 
-        //点击关注之后就触发相应的关注的事件
-        eventProducer.fireEvent(new EventModel(EventType.UNFOLLOW)
-                .setActorId(hostHolder.getUser().getId()).setEntityType(EntityType.ENTITY_QUESTION)   //事件的触发者的id，触发者关注的对象属性是人
-                .setEntityId(questionId).setEntityOwnerId(question.getUserId()));  //关注的对象的id，
+//        //点击关注之后就触发相应的关注的事件
+//        eventProducer.fireEvent(new EventModel(EventType.UNFOLLOW)
+//                .setActorId(hostHolder.getUser().getId()).setEntityType(EntityType.ENTITY_QUESTION)   //事件的触发者的id，触发者关注的对象属性是人
+//                .setEntityId(questionId).setEntityOwnerId(question.getUserId()));  //关注的对象的id，
         //与前端交互的信息
         Map<String, Object> info = new HashMap<>();
         info.put("head_url", hostHolder.getUser().getHead_url());
@@ -170,7 +171,7 @@ public class FollowController {
 
     }
 
-    private List<viewObject> getUserInfo(Integer localUserId, List<Integer> userIds){
+    private List<viewObject> getUserInfo(int localUserId, List<Integer> userIds){
         List<viewObject> userInfo = new ArrayList<>();
         for (int uid :  userIds){
             User user = uService.getUser(uid);

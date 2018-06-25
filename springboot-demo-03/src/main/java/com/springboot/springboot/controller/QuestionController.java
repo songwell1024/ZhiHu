@@ -1,10 +1,7 @@
 package com.springboot.springboot.controller;
 
 import com.springboot.springboot.model.*;
-import com.springboot.springboot.service.CommentService;
-import com.springboot.springboot.service.LikeService;
-import com.springboot.springboot.service.questionService;
-import com.springboot.springboot.service.userService;
+import com.springboot.springboot.service.*;
 import com.springboot.springboot.utils.WendaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +32,9 @@ public class QuestionController {
 
     @Autowired
     LikeService likeService;
+
+    @Autowired
+    FollowService followService;
 
     @RequestMapping(path = "/question/add",method = {RequestMethod.POST})
     @ResponseBody               //因为是弹框，所以这里用的是json的返回
@@ -88,6 +88,28 @@ public class QuestionController {
         }
 
         model.addAttribute("comments",comments);
+
+        //获取关注的问题信息
+        List<Integer> users = followService.getFollowers(qid, EntityType.ENTITY_QUESTION, 20);
+        List<viewObject> followers = new ArrayList<>();
+        for (Integer userId : users){
+            viewObject vo = new viewObject();
+            User u = uService.getUser(userId);
+            if (u == null){
+                continue;
+            }
+            vo.set("name", u.getName());
+            vo.set("head_url", u.getHead_url());
+            vo.set("id", u.getId());
+            followers.add(vo);
+        }
+        model.addAttribute("followUsers",followers);
+        if (hostHolder.getUser() != null){
+            model.addAttribute("followed", followService.isFollower(hostHolder.getUser().getId(),qid, EntityType.ENTITY_QUESTION));
+
+        }else {
+            model.addAttribute("followed", false);
+        }
         return "detail";
 
     }

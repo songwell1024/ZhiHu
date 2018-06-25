@@ -11,6 +11,7 @@ import com.springboot.springboot.service.MessageService;
 import com.springboot.springboot.service.userService;
 import com.springboot.springboot.utils.WendaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -21,6 +22,7 @@ import java.util.List;
  * @date 2018/6/24
  * 点击关注引发的事件
  */
+@Component
 public class FollowHandler implements EventHandler {
 
     @Autowired
@@ -34,6 +36,7 @@ public class FollowHandler implements EventHandler {
         Message message = new Message();
         message.setFrom_id(WendaUtil.SYSTEMCONTROLLER_userId);    //发送消息的是系统
         message.setTo_id(model.getEntityOwnerId());
+        message.setConversationId(message.getConversationId());
         message.setCreated_date(new Date());
         User user = uService.getUser(model.getActorId());
         if (model.getEntityType() == EntityType.ENTITY_QUESTION){
