@@ -17,6 +17,9 @@ public class RedisKeyUtil {
     //关注对象
     private static String BIZ_FOLLOWEE = "FOLLOWEE";
 
+    //timeline推模式的key
+    private static String BIZ_TIMELINE = "TIMELINE";
+
     //获取点赞的key
     public static String getLikeKey(int entityType, int entityId){
         return BIZ_LIKE + SPLIT + String.valueOf(entityType) + SPLIT +String.valueOf(entityId);
@@ -41,4 +44,8 @@ public class RedisKeyUtil {
         return BIZ_FOLLOWEE + SPLIT + String.valueOf(userId) + SPLIT + String.valueOf(entityType);
     }
 
+    //获取TimeLine的key
+    public static String getTimelineKey(int userId){
+        return BIZ_TIMELINE + SPLIT + String.valueOf(userId);
+    }
 }

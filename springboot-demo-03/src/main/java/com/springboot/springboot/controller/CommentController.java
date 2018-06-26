@@ -1,5 +1,8 @@
 package com.springboot.springboot.controller;
 
+import com.springboot.springboot.async.EventModel;
+import com.springboot.springboot.async.EventProducer;
+import com.springboot.springboot.async.EventType;
 import com.springboot.springboot.model.Comment;
 import com.springboot.springboot.model.EntityType;
 import com.springboot.springboot.model.HostHolder;
@@ -33,6 +36,9 @@ public class CommentController {
     @Autowired
     questionService qService;
 
+    @Autowired
+    EventProducer eventProducer;
+
     @RequestMapping(path = {"/addComment"},method = RequestMethod.POST)
     public String addComment(@RequestParam("question_id") int question_id, @RequestParam("content") String content){
         try{
@@ -53,6 +59,8 @@ public class CommentController {
             int count = commentService.getCommentCount(comment.getEntity_id(),EntityType.ENTITY_QUESTION);
             qService.updateCommentCount(comment.getEntity_id(),count);    //这里的entry_id就是question的ID  从这里看comment.setEntity_id(question_id);
 
+            eventProducer.fireEvent(new EventModel(EventType.COMMENT).setActorId(comment.getUser_id())
+                    .setEntityId(question_id));
 
         }catch (Exception e){
             logger.error("增加评论失败" + e.getMessage());
