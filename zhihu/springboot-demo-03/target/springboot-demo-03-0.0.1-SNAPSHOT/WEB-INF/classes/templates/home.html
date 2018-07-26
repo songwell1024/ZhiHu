@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <#--变量-->
+    ${value1}</br>
+    ${value2?if_exists}</br>   <#--如果存在输出，不存在不输出-->
+    ${value2!}</br>   <#--如果存在输出，不存在不输出-->
+    ${value2?default("默认")}</br>  <#--如果不存在输出默认值-->
+
+    <#--字符串拼接-->
+    ${"this value is  ${value1}"}</br>
+
+    <#--字符串截取-->
+    <#assign str = "qwertyuiop">
+    ${str?substring(0,4)}</br>  <#--输出qwer-->
+    ${str[0]}${str[2]}</br>   <#--输出qe-->
+    ${str[0..4]}</br>  <#--输出qwert-->
+
+    <#--直接在这里面设置变量-->
+    <#assign title = "问答">
+    ${title}</br>
+
+    <#--遍历集合-->
+     <#list Colors as col>
+         Color:${col}
+         </br>
+     </#list>
+
+
+
+
+    <#list Colors as col>
+        ${col}
+    </#list>
+    </br>
+
+    <#--遍历map的第一种方式-->
+    <#--获取Maps的key-->
+    <#assign keys= maps?keys/>
+    <#--遍历Map-->
+    <#list keys as key>
+        Key:${key},Value:${maps["${key}"]}
+    </#list>
+    </br>
+
+    <#--遍历map的第二种方式-->
+    <#list maps?keys as key>
+        Key:${key},Value:${maps["${key}"]}
+    </#list>
+    </br>
+
+    <#--遍历Map中的value-->
+    <#list maps?values as value>
+        Value:${value}
+    </#list>
+    </br>
+
+    <#--取出自己定义的类中的变量-->
+    User：${User.name?if_exists}</br>
+    User: ${"Hello " + User.name}</br>
+    <#--这个检测不到-->
+    UserDescription：${User.description?if_exists}</br>
+    UserDescription：${User.userDescription()!}</br>
+
+    <#--包含另一个html文件-->
+    <#--是否作为ftl语法解析,默认是true，false就是以文本方式引入,
+        注意:在ftl文件里布尔值都是直接赋值的如parse=true,而不是parse="true"-->
+    <#include "/header.html" encoding="UTF-8" parse=false></br>
+    <#include "/header.html" encoding="UTF-8" parse=true></br>
+
+    <#if  value1== "aaa">
+         haha
+    <#elseif  value1== "aaaa">
+         ....
+    <#elseif  value1??>         <#--判断是否为空-->
+        .....
+    <#else>
+        ......
+    </#if>
+
+</body>
+</html>
+
+
